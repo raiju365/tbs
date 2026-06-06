@@ -1,22 +1,21 @@
 package main
-
 import "fmt"
 const NMAX = 9999
-type Peserta struct {
+type Peserta struct{
 	ID          int
 	nama        string
 	tanggal     string
 	bidangMinat string
 }
-type Kursus struct {
+type Kursus struct{
 	kodeKursus string
 	namaKursus string
 }
-type DaftarPeserta struct {
+type DaftarPeserta struct{
 	Data [NMAX]Peserta
 	N    int
 }
-type KatalogKursus struct {
+type KatalogKursus struct{
 	Data [NMAX]Kursus
 	N    int
 }
@@ -36,8 +35,7 @@ func tambahPendaftar(d *DaftarPeserta){
 		fmt.Println("Kapasitas pendaftaran penuh!")
 	}
 }
-
-func ubahPendaftar(d *DaftarPeserta){
+func ubahPendaftar(d *DaftarPeserta){ // sequential search
 	var id int
 	var ketemu bool = false
 	var i int = 0
@@ -60,8 +58,7 @@ func ubahPendaftar(d *DaftarPeserta){
 		fmt.Println("Data Tidak Ditemukan!")
 	}
 }
-
-func hapusPendaftar(d *DaftarPeserta){
+func hapusPendaftar(d *DaftarPeserta){ // ada sequential search nya
 	var id int
 	var ketemu int = -1
 	fmt.Print("Masukkan ID yg Ingin dihapus: ")
@@ -81,8 +78,7 @@ func hapusPendaftar(d *DaftarPeserta){
 		fmt.Println("Data Tidak Ditemukan!")
 	}
 }
-
-func cariBerdasarkanMinat(d DaftarPeserta){
+func cariBerdasarkanMinat(d DaftarPeserta){ // sequential search
 	var minat string
 	var ketemu bool = false
 	fmt.Print("Masukan Bidang Minat: ")
@@ -97,7 +93,6 @@ func cariBerdasarkanMinat(d DaftarPeserta){
 		fmt.Println("Data idak ditemukan!")
 	}
 }
-
 func tambahKatalog(k *KatalogKursus){ 
 	if k.N < NMAX{
 		fmt.Print("Masukkan Kode Kursus: ")
@@ -110,7 +105,6 @@ func tambahKatalog(k *KatalogKursus){
 		fmt.Println("Katalog Kursus penuh!")
 	}
 }
-
 func tampilkanKatalog(k KatalogKursus){
 	if k.N == 0{ 
 		fmt.Println("Katalog Kursus masih kosong.")
@@ -121,36 +115,90 @@ func tampilkanKatalog(k KatalogKursus){
 		}
 	}
 }
+func cariBerdasarkanNama(d DaftarPeserta){ // binary search
+	var namaCari string
+	var kr, kn, teng int
+	var ketemu int = -1
+	fmt.Print("Masukkan Nama yang dicari: ")
+	fmt.Scan(&namaCari)
+	kr = 0
+	kn = d.N - 1
+	for kr <= kn && ketemu == -1{
+		teng = (kr + kn) / 2
+		if namaCari < d.Data[teng].nama{
+			kn = teng - 1
+		} else if namaCari > d.Data[teng].nama{
+			kr = teng + 1
+		} else{
+			ketemu = teng
+		}
+	}
 
-func cariBerdasarkanNama(){ // binary search
-
+	if ketemu != -1{
+		fmt.Println("Data Ditemukan! ID:", d.Data[ketemu].ID, "| Nama:", d.Data[ketemu].nama, "| Minat:", d.Data[ketemu].bidangMinat)
+	} else {
+		fmt.Println("Data tidak ditemukan!")
+	}
 }
-
-func ururtBerdasarkanId(d *DaftarPeserta){
-	var pass, idx_min, i int
+func ururtBerdasarkanId(d *DaftarPeserta){ // selection sort
+	var pass, idx, i int
 	var temp Peserta
 	for pass = 1; pass <= d.N-1; pass++{
-		idx_min = pass - 1
+		idx = pass - 1
 		for i = pass; i < d.N; i++{
-			if d.Data[i].ID < d.Data[idx_min].ID {
-				idx_min = i
+			if d.Data[i].ID < d.Data[idx].ID {
+				idx = i
 			}
 		}
 		temp = d.Data[pass-1]
-		d.Data[pass-1] = d.Data[idx_min]
-		d.Data[idx_min] = temp
+		d.Data[pass-1] = d.Data[idx]
+		d.Data[idx] = temp
 	}
 	fmt.Println("Data berhasil diurutkan berdasarkan ID (Selection Sort).")
 }
+func ururtBerdasarkanNama(d *DaftarPeserta){ //insertion sort
+	var pass int
+	var temp Peserta
+	for pass = 1; pass < d.N; pass++ {
+		temp = d.Data[pass]
+		i:= pass - 1
 
-func ururtBerdasarkanNama(){ //insertion sort
+		for i >= 0 && d.Data[i].nama > temp.nama {
+			d.Data[i+1] = d.Data[i]
+			i--
+		}
+		d.Data[i+1] = temp
+	}
+	fmt.Println("Data Berhasil Diurutkan Berdasarkan Nama")
+	
+}
+func tampilkanStatistik(d *DaftarPeserta){ //?
+	var ALPRO, SD, PBD, RPL, EA int
+	for i := 0; i < d.N; i++{
+		
+		switch d.Data[i].bidangMinat {
+		case "Algoritma Dan Pemograman":
+			ALPRO++
+		case "Struktur Data":
+			SD++
+		case "Pemodelan Basis Data":
+			PBD++
+		case "Rekayasa Perangkat Lunak":
+			RPL++
+		case "Etika Ai":
+			EA++
+		}
+	}
+	fmt.Println("\n=== Statistik Peserta ===")
+	fmt.Println("Algoritma Dan Pemograman :", ALPRO)
+	fmt.Println("Struktur Data            :", SD)
+	fmt.Println("Pemodelan Basis Data     :", PBD)
+	fmt.Println("Rekayasa Perangkat Lunak :", RPL)
+	fmt.Println("Etika Ai                 :", EA)
+	fmt.Println("----------------------------")
+	fmt.Println("Total Peserta Aktif      :", d.N)
 
 }
-
-func tampilkanStatistik(){ //?
-
-}
-
 func tampilkanSemua(d DaftarPeserta){
 	if d.N == 0{
 		fmt.Println("Belum ada data peserta.")
@@ -158,11 +206,10 @@ func tampilkanSemua(d DaftarPeserta){
 		fmt.Println("\n=== Semua Data Peserta ===")
 		fmt.Printf("| %-5s | %-15s | %-12s | %-12s |\n", "ID", "NAMA", "TANGGAL", "MINAT")
 		for i := 0; i < d.N; i++ {
-			fmt.Printf("| %-5d | %-15s | %-12s | %-12s |\n", d.Data[i].ID, d.Data[i].nama, d.Data[i].tanggal, d.Data[i].bidangMinat)
+			fmt.Printf(" %-5d  %-15s  %-12s  %-12s \n", d.Data[i].ID, d.Data[i].nama, d.Data[i].tanggal, d.Data[i].bidangMinat)
 		}
 	}
 }
-
 func main(){
 	var daftar DaftarPeserta
 	var katalog KatalogKursus
@@ -172,10 +219,10 @@ func main(){
 		fmt.Println("1. Tambah Peserta")
 		fmt.Println("2. Ubah Data Peserta")
 		fmt.Println("3. Hapus Data Peserta")
-		fmt.Println("4. Cari Berdasarkan Minat (Sequential)")
-		fmt.Println("5. Cari Berdasarkan Nama (Binary)")
-		fmt.Println("6. Urutkan Berdasarkan ID (Selection)")
-		fmt.Println("7. Urutkan Berdasarkan Nama (Insertion)")
+		fmt.Println("4. Cari Berdasarkan Minat ")
+		fmt.Println("5. Cari Berdasarkan Nama ")
+		fmt.Println("6. Urutkan Berdasarkan ID ")
+		fmt.Println("7. Urutkan Berdasarkan Nama ")
 		fmt.Println("8. Tampilkan Statistik")
 		fmt.Println("9. Tampilkan Semua Peserta")
 		fmt.Println("10. Tambah Katalog Kursus")
@@ -184,7 +231,7 @@ func main(){
 		fmt.Print("Pilih menu: ")
 		fmt.Scan(&n)
 
-		if n == 1{
+		if n == 1{	
 			tambahPendaftar(&daftar)
 		} else if n == 2{
 			ubahPendaftar(&daftar)
@@ -193,13 +240,13 @@ func main(){
 		} else if n == 4{
 			cariBerdasarkanMinat(daftar) 
 		} else if n == 5{
-			cariBerdasarkanNama()
+			cariBerdasarkanNama(daftar)
 		} else if n == 6{
 			ururtBerdasarkanId(&daftar)
 		} else if n == 7{
-			ururtBerdasarkanNama()
+			ururtBerdasarkanNama(&daftar)
 		} else if n == 8{
-			tampilkanStatistik()
+			tampilkanStatistik(&daftar)
 		} else if n == 9{
 			tampilkanSemua(daftar)
 		} else if n == 10{
