@@ -136,7 +136,7 @@ func hapusPendaftarBerdasarkanID(d *DaftarPeserta) {
 	}
 }
 
-func ururtBerdasarkanId(d *DaftarPeserta, isAscending bool) { // Selection Sort
+func ururtBerdasarkanId(d *DaftarPeserta, isAscending bool) {
 	var pass, idx, i int
 	var temp Peserta
 
@@ -146,13 +146,13 @@ func ururtBerdasarkanId(d *DaftarPeserta, isAscending bool) { // Selection Sort
 		for i = pass; i < d.N; i++ {
 			if isAscending {
 
-				if d.Data[i].ID < d.Data[idx].ID { // Ascending
+				if d.Data[i].ID < d.Data[idx].ID { 
 					idx = i
 				}
 
 			} else {
 
-				if d.Data[i].ID > d.Data[idx].ID { // Descending
+				if d.Data[i].ID > d.Data[idx].ID { 
 					idx = i
 				}
 
@@ -167,7 +167,7 @@ func ururtBerdasarkanId(d *DaftarPeserta, isAscending bool) { // Selection Sort
 }
 
 
-func urutBerdasarkanNama(d *DaftarPeserta, isAscending bool) { //Insertion Sort
+func urutBerdasarkanNama(d *DaftarPeserta, isAscending bool) {
 	var pass int
 	var temp Peserta
 
@@ -177,14 +177,14 @@ func urutBerdasarkanNama(d *DaftarPeserta, isAscending bool) { //Insertion Sort
 
 		if isAscending {
 			
-			for i >= 0 && d.Data[i].nama > temp.nama { // Ascending
+			for i >= 0 && d.Data[i].nama > temp.nama {
 				d.Data[i+1] = d.Data[i]
 				i = i - 1
 			}
 
 		} else {
 		
-			for i >= 0 && d.Data[i].nama < temp.nama { // Descending
+			for i >= 0 && d.Data[i].nama < temp.nama {
 				d.Data[i+1] = d.Data[i]
 				i = i - 1
 			}
@@ -196,7 +196,7 @@ func urutBerdasarkanNama(d *DaftarPeserta, isAscending bool) { //Insertion Sort
 	fmt.Println("Data Berhasil Diurutkan Berdasarkan Nama.")
 }
 
-func cariBerdasarkanMinat(d DaftarPeserta) { //Sequential Search
+func cariBerdasarkanMinat(d DaftarPeserta) {
 	var minat string
 	var ketemu bool = false
 	var k int = 0
@@ -229,7 +229,7 @@ func cariBerdasarkanMinat(d DaftarPeserta) { //Sequential Search
 	}
 }
 
-func cariBerdasarkanNama(d *DaftarPeserta) { //Binary Search
+func cariBerdasarkanNama(d *DaftarPeserta) {
 	var nama string
 	var left, right, mid int
 	var found bool = false
