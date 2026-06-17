@@ -26,7 +26,7 @@ type KatalogKursus struct{
 	N int
 	Data [NMAX]Kursus
 }
-// Data dummy yang sudah diperbaiki
+
 func dataDummy(d *DaftarPeserta, k *KatalogKursus){
 	d.Data[0] = Peserta{ID: 103, nama: "Bianca", tanggal: "17-10-2026", bidangMinat: "Struktur_Data", status: true}
 	d.Data[1] = Peserta{ID: 101, nama: "Alvaro", tanggal: "03-10-2026", bidangMinat: "Algoritma_Pemrograman", status: true}
