@@ -5,11 +5,11 @@ import "fmt"
 const NMAX = 11
 
 type Peserta struct {
-	ID          int
-	nama        string
-	tanggal     string
+	ID int
+	nama string
+	tanggal string
 	bidangMinat string
-	status      bool
+	status bool
 }
 
 type Kursus struct {
@@ -18,18 +18,18 @@ type Kursus struct {
 }
 
 type DaftarPeserta struct {
-	N    int
+	N int
 	Data [NMAX]Peserta
 }
 
 type KatalogKursus struct {
-	N    int
+	N int
 	Data [NMAX]Kursus
 }
 
 type Koordinator struct {
 	namaKoordinator string
-	kodeKursus      string
+	kodeKursus string
 }
 
 type koordinatorKUR [NMAX]Koordinator
