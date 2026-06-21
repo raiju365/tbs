@@ -4,30 +4,46 @@ import "fmt"
 
 const NMAX = 11
 
-type Peserta struct{
-	ID int
-	nama string
-	tanggal string
+type Peserta struct {
+	ID          int
+	nama        string
+	tanggal     string
 	bidangMinat string
-	status bool
+	status      bool
 }
 
-type Kursus struct{
+type Kursus struct {
 	kodeKursus string
 	namaKursus string
 }
 
-type DaftarPeserta struct{
-	N int
+type DaftarPeserta struct {
+	N    int
 	Data [NMAX]Peserta
 }
 
-type KatalogKursus struct{
-	N int
+type KatalogKursus struct {
+	N    int
 	Data [NMAX]Kursus
 }
 
-func dataDummy(d *DaftarPeserta, k *KatalogKursus){
+type Koordinator struct {
+	namaKoordinator string
+	kodeKursus      string
+}
+
+type koordinatorKUR [NMAX]Koordinator
+
+func dataDummyKoordinator(k *koordinatorKUR, n *int) {
+	k[0] = Koordinator{"Budi", "ALPRO"}
+	k[1] = Koordinator{"Siti", "SD"}
+	k[2] = Koordinator{"Andi", "EA"}
+	k[3] = Koordinator{"Rina", "RPL"}
+	k[4] = Koordinator{"Dewi", "PBD"}
+	*n = 5
+}
+
+func dataDummy(d *DaftarPeserta, k *KatalogKursus) {
 	d.Data[0] = Peserta{ID: 103, nama: "Bianca", tanggal: "17-10-2026", bidangMinat: "Struktur_Data", status: true}
 	d.Data[1] = Peserta{ID: 101, nama: "Alvaro", tanggal: "03-10-2026", bidangMinat: "Algoritma_Pemrograman", status: true}
 	d.Data[2] = Peserta{ID: 105, nama: "Cathrine", tanggal: "03-12-2026", bidangMinat: "Etika_AI", status: false}
@@ -48,20 +64,20 @@ func dataDummy(d *DaftarPeserta, k *KatalogKursus){
 	k.N = 5
 }
 
-func tambahPendaftar(d *DaftarPeserta){
+
+func tambahPendaftar(d *DaftarPeserta) {
 	var numID int
-	if d.N >= NMAX { 
+	if d.N >= NMAX {
 		fmt.Println("Kapasitas peserta sudah penuh!")
 	}
 
-	if d.N < NMAX { 
+	if d.N < NMAX {
 		fmt.Println()
 		fmt.Print("Masukkan ID: ")
 		fmt.Scan(&numID)
 
-		
 		for i := 0; i < d.N; i++ {
-			if d.Data[i].ID == numID{
+			if d.Data[i].ID == numID {
 				fmt.Println("ID sudah terdaftar, silakan masukkan ID yang lain.")
 				return
 			}
@@ -76,7 +92,7 @@ func tambahPendaftar(d *DaftarPeserta){
 		fmt.Scan(&d.Data[d.N].bidangMinat)
 		fmt.Print("Masukkan Status: ")
 		fmt.Scan(&d.Data[d.N].status)
-		d.N = d.N + 1 
+		d.N = d.N + 1
 		fmt.Println("Peserta berhasil ditambahkan.")
 		fmt.Println()
 	}
@@ -129,14 +145,14 @@ func hapusPendaftarBerdasarkanID(d *DaftarPeserta) {
 		for i := ketemu; i < d.N-1; i++ {
 			d.Data[i] = d.Data[i+1]
 		}
-		d.N = d.N - 1 
+		d.N = d.N - 1
 		fmt.Println("Data Berhasil Dihapus!")
 	} else {
 		fmt.Println("Data Tidak Ditemukan!")
 	}
 }
 
-func ururtBerdasarkanId(d *DaftarPeserta, isAscending bool) {
+func urutBerdasarkanId(d *DaftarPeserta, isAscending bool) { // Selection Sort
 	var pass, idx, i int
 	var temp Peserta
 
@@ -145,17 +161,13 @@ func ururtBerdasarkanId(d *DaftarPeserta, isAscending bool) {
 
 		for i = pass; i < d.N; i++ {
 			if isAscending {
-
-				if d.Data[i].ID < d.Data[idx].ID { 
+				if d.Data[i].ID < d.Data[idx].ID { // Ascending
 					idx = i
 				}
-
 			} else {
-
-				if d.Data[i].ID > d.Data[idx].ID { 
+				if d.Data[i].ID > d.Data[idx].ID { // Descending
 					idx = i
 				}
-
 			}
 		}
 
@@ -166,8 +178,7 @@ func ururtBerdasarkanId(d *DaftarPeserta, isAscending bool) {
 	fmt.Println("Data berhasil diurutkan berdasarkan ID.")
 }
 
-
-func urutBerdasarkanNama(d *DaftarPeserta, isAscending bool) {
+func urutBerdasarkanNama(d *DaftarPeserta, isAscending bool) { //Insertion Sort
 	var pass int
 	var temp Peserta
 
@@ -175,20 +186,18 @@ func urutBerdasarkanNama(d *DaftarPeserta, isAscending bool) {
 		temp = d.Data[pass]
 		i := pass - 1
 
-		if isAscending {
-			
-			for i >= 0 && d.Data[i].nama > temp.nama {
+		if isAscending == true {
+
+			for i >= 0 && d.Data[i].nama > temp.nama { // Ascending
 				d.Data[i+1] = d.Data[i]
 				i = i - 1
 			}
+		} else if isAscending == false {
 
-		} else {
-		
-			for i >= 0 && d.Data[i].nama < temp.nama {
+			for i >= 0 && d.Data[i].nama < temp.nama { // Descending
 				d.Data[i+1] = d.Data[i]
 				i = i - 1
 			}
-
 		}
 
 		d.Data[i+1] = temp
@@ -196,7 +205,7 @@ func urutBerdasarkanNama(d *DaftarPeserta, isAscending bool) {
 	fmt.Println("Data Berhasil Diurutkan Berdasarkan Nama.")
 }
 
-func cariBerdasarkanMinat(d DaftarPeserta) {
+func cariBerdasarkanMinat(d DaftarPeserta) { //Sequential Search
 	var minat string
 	var ketemu bool = false
 	var k int = 0
@@ -206,7 +215,6 @@ func cariBerdasarkanMinat(d DaftarPeserta) {
 
 	for k < d.N {
 		if d.Data[k].bidangMinat == minat {
-
 			if !ketemu {
 				fmt.Println()
 				fmt.Println("------------------------- Hasil Pencarian Berdasarkan Minat -------------------------")
@@ -217,11 +225,8 @@ func cariBerdasarkanMinat(d DaftarPeserta) {
 
 			fmt.Printf(" %-5d  %-15s  %-12s  %-25s  %-5t \n", d.Data[k].ID, d.Data[k].nama, d.Data[k].tanggal, d.Data[k].bidangMinat, d.Data[k].status)
 			fmt.Println()
-
 		}
-
 		k = k + 1
-
 	}
 
 	if !ketemu {
@@ -229,38 +234,37 @@ func cariBerdasarkanMinat(d DaftarPeserta) {
 	}
 }
 
-func cariBerdasarkanNama(d *DaftarPeserta) {
+func cariBerdasarkanNama(d *DaftarPeserta) { //Binary Search
 	var nama string
 	var left, right, mid int
 	var found bool = false
-	
+
+	urutBerdasarkanNama(d, true)
+
 	fmt.Print("Masukkan Nama yang dicari: ")
 	fmt.Scan(&nama)
- 
+
 	left = 0
 	right = d.N - 1
- 
+
 	for left <= right && !found {
 		mid = (left + right) / 2
-			if d.Data[mid].nama == nama{
-
+		if d.Data[mid].nama == nama {
 			fmt.Println()
 			fmt.Println("------------------------- Hasil Pencarian Berdasarkan Nama --------------------------")
-			fmt.Printf(" %-5s  %-15s  %-12s  %-25s  %-5s \n","ID", "NAMA", "TANGGAL", "MINAT", "STATUS")
+			fmt.Printf(" %-5s  %-15s  %-12s  %-25s  %-5s \n", "ID", "NAMA", "TANGGAL", "MINAT", "STATUS")
 			fmt.Println("-------------------------------------------------------------------------------------")
 			fmt.Printf(" %-5d  %-15s  %-12s  %-25s  %-5t \n", d.Data[mid].ID, d.Data[mid].nama, d.Data[mid].tanggal, d.Data[mid].bidangMinat, d.Data[mid].status)
 			fmt.Println("-------------------------------------------------------------------------------------")
 			fmt.Println()
-
 			found = true
-
 		} else if d.Data[mid].nama < nama {
 			left = mid + 1
 		} else {
 			right = mid - 1
 		}
 	}
- 
+
 	if !found {
 		fmt.Println("Data tidak ditemukan!")
 	}
@@ -274,12 +278,10 @@ func tambahKatalog(k *KatalogKursus) {
 		fmt.Scan(&inputKode)
 
 		for i := 0; i < k.N; i++ {
-
 			if k.Data[i].kodeKursus == inputKode {
 				fmt.Println("Kode Kursus sudah terdaftar, silakan masukkan kode yang lain.")
 				return
 			}
-
 		}
 
 		k.Data[k.N].kodeKursus = inputKode
@@ -302,7 +304,6 @@ func ubahKatalog(k *KatalogKursus) {
 	fmt.Scan(&kode)
 
 	for i < k.N && !ketemu {
-		
 		if k.Data[i].kodeKursus == kode {
 			fmt.Print("Masukkan Nama Kursus baru: ")
 			fmt.Scan(&k.Data[i].namaKursus)
@@ -335,7 +336,7 @@ func hapusKatalog(k *KatalogKursus) {
 			k.Data[i] = k.Data[i+1]
 		}
 
-		k.N = k.N - 1 
+		k.N = k.N - 1
 		fmt.Println("Data Katalog Berhasil Dihapus!")
 	} else {
 		fmt.Println("Data Katalog Tidak Ditemukan!")
@@ -359,6 +360,18 @@ func tampilkanKatalog(k KatalogKursus) {
 	}
 }
 
+func tampilKoordinator(k koordinatorKUR, n int) {
+	fmt.Println()
+	fmt.Println("===== DATA KOORDINATOR =====")
+
+	for i := 0; i < n; i++ {
+		fmt.Printf("Koordinator : %s\n", k[i].namaKoordinator)
+		fmt.Printf("Kode Kursus : %s\n", k[i].kodeKursus)
+		fmt.Println("----------------------------")
+		fmt.Println()
+	}
+}
+
 func tampilkanStatistik(d *DaftarPeserta, k *KatalogKursus) {
 	var totalAktif int
 
@@ -367,13 +380,13 @@ func tampilkanStatistik(d *DaftarPeserta, k *KatalogKursus) {
 
 	for i := 0; i < k.N; i++ {
 		var jumlahPeminat int = 0
-		
+
 		for j := 0; j < d.N; j++ {
 			if d.Data[j].bidangMinat == k.Data[i].namaKursus {
 				jumlahPeminat = jumlahPeminat + 1
 			}
 		}
-		
+
 		fmt.Printf("%-25s : %d\n", k.Data[i].kodeKursus, jumlahPeminat)
 	}
 
@@ -389,6 +402,7 @@ func tampilkanStatistik(d *DaftarPeserta, k *KatalogKursus) {
 	fmt.Println()
 }
 
+
 func tampilkanSemua(d DaftarPeserta) {
 	if d.N == 0 {
 		fmt.Println("Belum ada data peserta.")
@@ -399,16 +413,17 @@ func tampilkanSemua(d DaftarPeserta) {
 		fmt.Println("-------------------------------------------------------------------------")
 
 		for i := 0; i < d.N; i++ {
-			fmt.Printf(" %-5d  %-15s  %-12s  %-25s  %-10t \n", d.Data[i].ID, d.Data[i].nama, d.Data[i].tanggal, d.Data[i].bidangMinat, d.Data[i].status)
+			fmt.Printf(" %-5d  %-15s  %-12s  %-25s  %-10t \n", d.Data[i].ID, d.Data[i].nama, d.Data[i].tanggal,
+			d.Data[i].bidangMinat, d.Data[i].status)
 		}
 		fmt.Println()
 	}
 }
 
-func menu(daftar *DaftarPeserta, katalog *KatalogKursus) {
+func menu(daftar *DaftarPeserta, katalog *KatalogKursus, koordinator *koordinatorKUR, nKoord int) {
 	var n int
 
-	for n != 10 {
+	for n != 11 {
 		fmt.Println("--------- KursusIn ---------")
 		fmt.Println("1. Kelola Data Peserta")
 		fmt.Println("2. Kelola Data Katalog")
@@ -419,7 +434,8 @@ func menu(daftar *DaftarPeserta, katalog *KatalogKursus) {
 		fmt.Println("7. Tampilkan Statistik")
 		fmt.Println("8. Tampilkan Semua Peserta")
 		fmt.Println("9. Tampilkan Katalog Kursus")
-		fmt.Println("10. Keluar")
+		fmt.Println("10. Tampilkan Koordinator")
+		fmt.Println("11. Keluar")
 		fmt.Print("Pilih Opsi: ")
 
 		fmt.Scan(&n)
@@ -428,7 +444,7 @@ func menu(daftar *DaftarPeserta, katalog *KatalogKursus) {
 			var subMenu int
 
 			fmt.Println()
-			fmt.Println("1. Tambah") 
+			fmt.Println("1. Tambah")
 			fmt.Println("2. Ubah")
 			fmt.Println("3. Hapus")
 			fmt.Print("Pilih: ")
@@ -443,12 +459,12 @@ func menu(daftar *DaftarPeserta, katalog *KatalogKursus) {
 			} else {
 				fmt.Println("Pilihan tidak valid!")
 			}
-			
+
 		} else if n == 2 {
 			var subMenu int
 
 			fmt.Println()
-			fmt.Println("1. Tambah") 
+			fmt.Println("1. Tambah")
 			fmt.Println("2. Ubah")
 			fmt.Println("3. Hapus")
 			fmt.Print("Pilih: ")
@@ -473,12 +489,13 @@ func menu(daftar *DaftarPeserta, katalog *KatalogKursus) {
 			fmt.Scan(&opsiUrut)
 
 			if opsiUrut == 1 {
-				ururtBerdasarkanId(daftar, true)
+				urutBerdasarkanId(daftar, true)
 			} else if opsiUrut == 2 {
-				ururtBerdasarkanId(daftar, false)
+				urutBerdasarkanId(daftar, false)
 			} else {
 				fmt.Println("Pilihan tidak valid!")
 			}
+			
 		} else if n == 4 {
 			var opsiUrut int
 
@@ -506,6 +523,8 @@ func menu(daftar *DaftarPeserta, katalog *KatalogKursus) {
 		} else if n == 9 {
 			tampilkanKatalog(*katalog)
 		} else if n == 10 {
+			tampilKoordinator(*koordinator, nKoord)
+		} else if n == 11 {
 			fmt.Println("Terima kasih telah menggunakan Sistem KursusIn!")
 		} else {
 			fmt.Println("Pilihan tidak valid!")
@@ -516,8 +535,10 @@ func menu(daftar *DaftarPeserta, katalog *KatalogKursus) {
 func main() {
 	var daftar DaftarPeserta
 	var katalog KatalogKursus
+	var koordinator koordinatorKUR
+	var nKoord int
 
 	dataDummy(&daftar, &katalog)
-	menu(&daftar, &katalog)
-
+	dataDummyKoordinator(&koordinator, &nKoord)
+	menu(&daftar, &katalog, &koordinator, nKoord)
 }
